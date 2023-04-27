@@ -5,6 +5,7 @@ import 'constants.dart';
 final themeData = ThemeData(
   scaffoldBackgroundColor: Colors.white,
   primarySwatch: Colors.teal,
+  fontFamily: 'Roboto',
   textTheme: TextTheme(
     headline1: TextStyle(
       color: colors[1],

@@ -1,20 +1,26 @@
+import 'package:camera/camera.dart';
 import 'package:cashcam/pages/home_page.dart';
 import 'package:cashcam/theme_data.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final cameras = await availableCameras();
+
+  runApp(MyApp(cameras));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp(this.cameras, {Key? key}) : super(key: key);
+
+  final List<CameraDescription> cameras;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CashCam',
       theme: themeData,
-      home: const HomePage(),
+      home: HomePage(cameras),
     );
   }
 }
