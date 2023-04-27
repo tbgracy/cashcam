@@ -69,13 +69,18 @@ class _HomePageState extends State<HomePage> {
               width: 300,
               height: 80,
               decoration: BoxDecoration(
-                color: colors[1].withAlpha(100),
+                color: colors[1].withAlpha(90),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: colors[1],
+                  width: 3,
+                ),
               ),
             ),
           ),
-          const Positioned(
+          Positioned(
             bottom: 40,
-            child: CameraActionContainerWidget(),
+            child: CameraActionContainerWidget(_cameraController),
           ),
         ],
       ),

@@ -1,20 +1,56 @@
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
+import '../services/photo_service.dart';
 
 class CameraActionContainerWidget extends StatefulWidget {
-  const CameraActionContainerWidget({
+  const CameraActionContainerWidget(
+    this.cameraController, {
     Key? key,
   }) : super(key: key);
 
+  final CameraController cameraController;
+
   @override
-  State<CameraActionContainerWidget> createState() => _CameraActionContainerWidgetState();
+  State<CameraActionContainerWidget> createState() =>
+      _CameraActionContainerWidgetState();
 }
 
-class _CameraActionContainerWidgetState extends State<CameraActionContainerWidget> {
+class _CameraActionContainerWidgetState
+    extends State<CameraActionContainerWidget> {
   String? _provider;
-  
-  void _takePicture() async {}
+
+  final service = PhotoService();
+
+  void _takePicture() async {
+    try {
+      final image = await widget.cameraController.takePicture();
+
+      // final originX = (MediaQuery.of(context).size.width - 300) ~/ 2;
+      // final originY = MediaQuery.of(context).size.height - ;
+      const originX = 80;
+      const originY = 80;
+
+      final x = await service.getCroppedImagePath(image.path, originX.round(), originY);
+
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: Image.file(
+              // File(image.path),
+              File(x),
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
