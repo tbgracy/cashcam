@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:camera/camera.dart';
+import 'package:cashcam/widgets/picture_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -39,12 +38,7 @@ class _CameraActionContainerWidgetState
       showDialog(
         context: context,
         builder: (context) {
-          return Dialog(
-            child: Image.file(
-              // File(image.path),
-              File(x),
-            ),
-          );
+          return PictureWidget(x);
         },
       );
     } catch (e) {

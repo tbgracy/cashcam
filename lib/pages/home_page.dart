@@ -17,8 +17,6 @@ class _HomePageState extends State<HomePage> {
   late CameraController _cameraController;
   late Future<void> _initializeControllerFuture;
 
-  void _takePicture() async {}
-
   @override
   void initState() {
     final backCamera = widget.cameras.firstWhere(
