@@ -1,0 +1,50 @@
+name: cashcam
+description: A mobile app that ease mobile money operations.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  cupertino_icons: ^1.0.2
+  camera: ^0.9.3+1
+  path_provider: ^2.0.14
+  path: ^1.8.1
+  ussd_advanced: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.11.0
+
+  flutter_lints: ^2.0.0
+
+flutter_icons:
+  android: true
+  image_path: assets/images/logo_cashcam.png
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: Audiowide
+      fonts:
+        - asset: "assets/fonts/Audiowide Regular.ttf"
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+    - family: Roboto
+      fonts:
+        - asset: "assets/fonts/Roboto Condensed Light.ttf"
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
