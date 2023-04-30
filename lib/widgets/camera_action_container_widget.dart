@@ -1,9 +1,11 @@
 import 'package:camera/camera.dart';
 import 'package:cashcam/widgets/picture_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:sim_data/sim_data.dart';
 
 import '../constants.dart';
 import '../services/photo_service.dart';
+import '../services/sim_service.dart';
 
 class CameraActionContainerWidget extends StatefulWidget {
   const CameraActionContainerWidget(
@@ -20,20 +22,22 @@ class CameraActionContainerWidget extends StatefulWidget {
 
 class _CameraActionContainerWidgetState
     extends State<CameraActionContainerWidget> {
-  String? _provider;
+  SimCard? _selectedCard;
 
   final service = PhotoService();
+  late Future<List<SimCard>> _simcards;
 
   void _takePicture() async {
     try {
       final image = await widget.cameraController.takePicture();
 
-      // final originX = (MediaQuery.of(context).size.width - 300) ~/ 2;
-      // final originY = MediaQuery.of(context).size.height - ;
-      const originX = 80;
-      const originY = 80;
+      const originX = 0;
+      const originY = 0;
 
-      final x = await service.getCroppedImagePath(image.path, originX.round(), originY);
+      final height = MediaQuery.of(context).size.height;
+
+      final x = await service.getCroppedImagePath(
+          image.path, originX.round(), originY, height.round());
 
       showDialog(
         context: context,
@@ -44,6 +48,25 @@ class _CameraActionContainerWidgetState
     } catch (e) {
       print(e);
     }
+  }
+
+  List<DropdownMenuItem<SimCard>> _getDropdownMenus(List<SimCard> simcards) {
+    List<DropdownMenuItem<SimCard>> result = [];
+    for (final simcard in simcards) {
+      result.add(
+        DropdownMenuItem(
+          value: simcard,
+          child: Text(simcard.displayName),
+        ),
+      );
+    }
+    return result;
+  }
+
+  @override
+  void initState() {
+    _simcards = SimService.getSimcards();
+    super.initState();
   }
 
   @override
@@ -68,30 +91,27 @@ class _CameraActionContainerWidgetState
               ),
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: DropdownButton<String>(
-                  hint: const Text('Choisir opérateur'),
-                  value: _provider,
-                  isDense: true,
-                  items: const [
-                    DropdownMenuItem(
-                      value: 'airtel',
-                      child: Text('Airtel'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'orange',
-                      child: Text('Orange'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'telma',
-                      child: Text('Telma'),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _provider = value;
-                    });
-                  },
-                ),
+                child: FutureBuilder(
+                    future: _simcards,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return DropdownButton<SimCard>(
+                          hint: const Text('Choisir opérateur'),
+                          value: _selectedCard,
+                          underline: const SizedBox(),
+                          isDense: true,
+                          items:
+                              _getDropdownMenus(snapshot.data as List<SimCard>),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedCard = value;
+                            });
+                          },
+                        );
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    }),
               ),
             ),
             IconButton(
