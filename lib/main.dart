@@ -2,12 +2,17 @@ import 'package:camera/camera.dart';
 import 'package:cashcam/pages/home_page.dart';
 import 'package:cashcam/theme_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
 
-  runApp(MyApp(cameras));
+  runApp(
+    ProviderScope(
+      child: MyApp(cameras),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -24,4 +29,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

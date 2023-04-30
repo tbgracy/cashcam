@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'constants.dart';
 
 final themeData = ThemeData(
+  useMaterial3: true,
   scaffoldBackgroundColor: Colors.white,
   primarySwatch: Colors.teal,
   fontFamily: 'Roboto',

@@ -1,11 +1,12 @@
 import 'package:camera/camera.dart';
-import 'package:cashcam/widgets/picture_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:sim_data/sim_data.dart';
 
 import '../constants.dart';
+import '../services/http_service.dart';
 import '../services/photo_service.dart';
 import '../services/sim_service.dart';
+import 'picture_widget.dart';
 
 class CameraActionContainerWidget extends StatefulWidget {
   const CameraActionContainerWidget(
@@ -24,29 +25,38 @@ class _CameraActionContainerWidgetState
     extends State<CameraActionContainerWidget> {
   SimCard? _selectedCard;
 
-  final service = PhotoService();
+  final photoService = PhotoService();
+  final httpService = HttpService();
   late Future<List<SimCard>> _simcards;
 
   void _takePicture() async {
-    try {
-      final image = await widget.cameraController.takePicture();
+    if (_selectedCard != null) {
+      try {
+        final image = await widget.cameraController.takePicture();
 
-      const originX = 0;
-      const originY = 0;
+        const originX = 0;
+        const originY = 0;
 
-      final height = MediaQuery.of(context).size.height;
+        final height = MediaQuery.of(context).size.height;
 
-      final x = await service.getCroppedImagePath(
-          image.path, originX.round(), originY, height.round());
+        final filename = await photoService.getCroppedImagePath(
+            image.path, originX.round(), originY, height.round());
 
-      showDialog(
-        context: context,
-        builder: (context) {
-          return PictureWidget(x);
-        },
+        showDialog(
+          context: context,
+          builder: (context) {
+            return PictureWidget(filename, _selectedCard!);
+          },
+        );
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Veuillez choisir un opérateur'),
+        ),
       );
-    } catch (e) {
-      print(e);
     }
   }
 
@@ -96,7 +106,7 @@ class _CameraActionContainerWidgetState
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         return DropdownButton<SimCard>(
-                          hint: const Text('Choisir opérateur'),
+                          hint: const Text('Choix d`opérateur'),
                           value: _selectedCard,
                           underline: const SizedBox(),
                           isDense: true,
@@ -106,6 +116,7 @@ class _CameraActionContainerWidgetState
                             setState(() {
                               _selectedCard = value;
                             });
+                            print(_selectedCard?.carrierName);
                           },
                         );
                       } else {
