@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
    <application
-        android:label="cashcam"
+        android:label="CashCam"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
