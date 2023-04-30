@@ -55,7 +55,12 @@ class _PictureWidgetState extends State<PictureWidget> {
                   height: 5,
                   child: LinearProgressIndicator(),
                 )
-              : Expanded(child: Image.file(File(widget._imagePath))),
+              : Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.file(File(widget._imagePath)),
+                  ),
+                ),
         ],
       ),
       actions: [
